@@ -44,9 +44,9 @@ public class DishController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateDish(@PathVariable Long id, @RequestBody Dish dish) {
-        dishService.updateDish(id, dish);
-        return ResponseEntity.ok("Dish updated successfully.");
+    public ResponseEntity<Dish> updateDish(@PathVariable Long id, @RequestBody Dish dish) {
+        Dish updatedDish = dishService.updateDish(id, dish);
+        return ResponseEntity.ok(updatedDish);
     }
 
     @DeleteMapping("/{id}")
@@ -56,8 +56,8 @@ public class DishController {
     }
 
     @PutMapping("/{id}/popular")
-    public ResponseEntity<String> markAsPopular(@PathVariable Long id) {
+    public ResponseEntity<Dish> markAsPopular(@PathVariable Long id) {
         dishService.markAsPopular(id);
-        return ResponseEntity.ok("Dish marked as popular.");
+        return ResponseEntity.ok(dishService.getDishById(id));
     }
 }

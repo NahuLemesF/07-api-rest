@@ -35,7 +35,6 @@ public class MenuService {
         Menu existingMenu = getMenuById(id);
         existingMenu.setName(menu.getName());
         existingMenu.setDescription(menu.getDescription());
-        updateMenuDishes(id, menu.getDishes());
         return menuRepository.save(existingMenu);
     }
 
