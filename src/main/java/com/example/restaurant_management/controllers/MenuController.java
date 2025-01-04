@@ -5,6 +5,7 @@ import com.example.restaurant_management.models.Menu;
 import com.example.restaurant_management.services.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -54,4 +55,11 @@ public class MenuController {
         Menu updatedMenu = menuService.updateMenuDishes(id, dishes);
         return ResponseEntity.ok(updatedMenu);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteMenu(@PathVariable Long id) {
+        menuService.deleteMenu(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }
