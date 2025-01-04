@@ -29,12 +29,11 @@ public class ClientService {
     }
 
     public Client updateClient(Long id, Client client) {
-        return clientRepository.findById(id).map(c -> {
-            c.setName(client.getName());
-            c.setLastName(client.getLastName());
-            c.setEmail(client.getEmail());
-            return clientRepository.save(c);
-        }).orElseThrow(() -> new RuntimeException("Cliente con el id " + id + " no encontrado"));
+        Client existingClient = getClientById(id);
+        existingClient.setName(client.getName());
+        existingClient.setLastName(client.getLastName());
+        existingClient.setEmail(client.getEmail());
+        return clientRepository.save(existingClient);
     }
 
     public void deleteClient(Long id) {
