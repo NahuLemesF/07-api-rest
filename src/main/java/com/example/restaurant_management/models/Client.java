@@ -21,6 +21,7 @@ public class Client {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    private String lastName;
 
     @Email(message = "Email no válido")
     private String email;
@@ -29,9 +30,10 @@ public class Client {
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Order> orders = new ArrayList<>();
 
-    public Client(Long id, String name, String email, Boolean isFrequent) {
+    public Client(Long id, String name, String lastName, String email, Boolean isFrequent) {
         this.id = id;
         this.name = name;
+        this.lastName = lastName;
         this.email = email;
         this.isFrequent = isFrequent;
     }
