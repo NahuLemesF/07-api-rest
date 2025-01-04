@@ -1,7 +1,10 @@
 package com.example.restaurant_management.controllers;
 
+import com.example.restaurant_management.dto.Client.ClientRequestDTO;
+import com.example.restaurant_management.dto.Client.ClientResponseDTO;
 import com.example.restaurant_management.models.Client;
 import com.example.restaurant_management.services.ClientService;
+import com.example.restaurant_management.utils.ClientDtoConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/clients")
@@ -27,24 +31,35 @@ public class ClientController {
     }
 
     @PostMapping
-    public ResponseEntity<Client> addClient(@RequestBody Client client) {
-        clientService.addClient(client);
-        return ResponseEntity.ok(client);
+    public ResponseEntity<ClientResponseDTO> addClient(@RequestBody ClientRequestDTO client) {
+        Client clientEntity = ClientDtoConverter.convertToEntity(client);
+        clientService.addClient(clientEntity);
+        ClientResponseDTO responseDTO = ClientDtoConverter.convertToDto(clientEntity);
+        return ResponseEntity.ok(responseDTO);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Client> getClientById(@PathVariable Long id) {
-        return ResponseEntity.ok(clientService.getClientById(id));
+    public ResponseEntity<ClientResponseDTO> getClientById(@PathVariable Long id) {
+        Client client = clientService.getClientById(id);
+        ClientResponseDTO responseDTO = ClientDtoConverter.convertToDto(client);
+        return ResponseEntity.ok(responseDTO);
     }
 
     @GetMapping
-    public ResponseEntity<List<Client>> getAllClients() {
-        return ResponseEntity.ok(clientService.getAllClients());
+    public ResponseEntity<List<ClientResponseDTO>> getAllClients() {
+        List<Client> clients = clientService.getAllClients();
+        List<ClientResponseDTO> responseDTOs = clients.stream()
+                .map(ClientDtoConverter::convertToDto)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(responseDTOs);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Client> updateClient(@PathVariable Long id, @RequestBody Client client) {
-        return ResponseEntity.ok(clientService.updateClient(id, client));
+    public ResponseEntity<ClientResponseDTO> updateClient(@PathVariable Long id, @RequestBody ClientRequestDTO client) {
+        Client clientEntity = ClientDtoConverter.convertToEntity(client);
+        Client updatedClient = clientService.updateClient(id, clientEntity);
+        ClientResponseDTO responseDTO = ClientDtoConverter.convertToDto(updatedClient);
+        return ResponseEntity.ok(responseDTO);
     }
 
     @DeleteMapping("/{id}")
@@ -54,8 +69,10 @@ public class ClientController {
     }
 
     @PutMapping("/{id}/frequent")
-    public ResponseEntity<Client> markAsFrequent(@PathVariable Long id) {
+    public ResponseEntity<ClientResponseDTO> markAsFrequent(@PathVariable Long id) {
         clientService.markAsFrequent(id);
-        return ResponseEntity.ok(clientService.getClientById(id));
+        Client client = clientService.getClientById(id);
+        ClientResponseDTO responseDTO = ClientDtoConverter.convertToDto(client);
+        return ResponseEntity.ok(responseDTO);
     }
 }
