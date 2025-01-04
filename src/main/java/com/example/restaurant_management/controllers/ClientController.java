@@ -16,12 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/client")
+@RequestMapping("/api/clients")
 public class ClientController {
 
-    @Autowired
     private final ClientService clientService;
 
+    @Autowired
     public ClientController(ClientService clientService) {
         this.clientService = clientService;
     }
@@ -48,7 +48,7 @@ public class ClientController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteClient(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteClient(@PathVariable Long id) {
         clientService.deleteClient(id);
         return ResponseEntity.noContent().build();
     }
