@@ -2,6 +2,7 @@ package com.example.restaurant_management.services;
 
 import com.example.restaurant_management.models.Dish;
 import com.example.restaurant_management.repositories.DishRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,6 +12,7 @@ public class DishService {
 
     private final DishRepository dishRepository;
 
+    @Autowired
     public DishService(DishRepository dishRepository) {
         this.dishRepository = dishRepository;
     }

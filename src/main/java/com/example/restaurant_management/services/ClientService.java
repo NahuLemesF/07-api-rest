@@ -2,6 +2,7 @@ package com.example.restaurant_management.services;
 
 import com.example.restaurant_management.models.Client;
 import com.example.restaurant_management.repositories.ClientRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,6 +12,7 @@ public class ClientService {
 
     private final ClientRepository clientRepository;
 
+    @Autowired
     public ClientService(ClientRepository clientRepository) {
         this.clientRepository = clientRepository;
     }
