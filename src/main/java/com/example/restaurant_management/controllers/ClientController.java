@@ -31,8 +31,8 @@ public class ClientController {
     }
 
     @PostMapping
-    public ResponseEntity<ClientResponseDTO> addClient(@RequestBody ClientRequestDTO client) {
-        Client clientEntity = ClientDtoConverter.convertToEntity(client);
+    public ResponseEntity<ClientResponseDTO> addClient(@RequestBody ClientRequestDTO clientRequest) {
+        Client clientEntity = ClientDtoConverter.convertToEntity(clientRequest);
         clientService.addClient(clientEntity);
         ClientResponseDTO responseDTO = ClientDtoConverter.convertToDto(clientEntity);
         return ResponseEntity.ok(responseDTO);

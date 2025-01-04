@@ -1,19 +1,17 @@
 package com.example.restaurant_management.controllers;
 
+import com.example.restaurant_management.dto.Dish.DishRequestDTO;
+import com.example.restaurant_management.dto.Dish.DishResponseDTO;
 import com.example.restaurant_management.models.Dish;
 import com.example.restaurant_management.services.DishService;
+import com.example.restaurant_management.utils.DishDtoConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/dishes")
@@ -27,25 +25,35 @@ public class DishController {
     }
 
     @PostMapping
-    public ResponseEntity<String> addDish(@RequestBody Dish dish) {
+    public ResponseEntity<DishResponseDTO> addDish(@RequestBody @Valid DishRequestDTO dishRequestDTO) {
+        Dish dish = DishDtoConverter.convertToEntity(dishRequestDTO);
         dishService.addDish(dish);
-        return ResponseEntity.ok("Dish added successfully.");
+        DishResponseDTO responseDTO = DishDtoConverter.convertToDto(dish);
+        return ResponseEntity.status(201).body(responseDTO);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Dish> getDishById(@PathVariable Long id) {
-        return ResponseEntity.ok(dishService.getDishById(id));
+    public ResponseEntity<DishResponseDTO> getDishById(@PathVariable Long id) {
+        Dish dish = dishService.getDishById(id);
+        DishResponseDTO responseDTO = DishDtoConverter.convertToDto(dish);
+        return ResponseEntity.ok(responseDTO);
     }
 
     @GetMapping
-    public ResponseEntity<List<Dish>> getAllDishes() {
-        return ResponseEntity.ok(dishService.getAllDishes());
+    public ResponseEntity<List<DishResponseDTO>> getAllDishes() {
+        List<Dish> dishes = dishService.getAllDishes();
+        List<DishResponseDTO> responseDTOs = dishes.stream()
+                .map(DishDtoConverter::convertToDto)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(responseDTOs);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Dish> updateDish(@PathVariable Long id, @RequestBody Dish dish) {
-        Dish updatedDish = dishService.updateDish(id, dish);
-        return ResponseEntity.ok(updatedDish);
+    public ResponseEntity<DishResponseDTO> updateDish(@PathVariable Long id, @RequestBody @Valid DishRequestDTO dishRequestDTO) {
+        Dish dishEntity = DishDtoConverter.convertToEntity(dishRequestDTO);
+        Dish updatedDish = dishService.updateDish(id, dishEntity);
+        DishResponseDTO responseDTO = DishDtoConverter.convertToDto(updatedDish);
+        return ResponseEntity.ok(responseDTO);
     }
 
     @DeleteMapping("/{id}")
@@ -55,8 +63,10 @@ public class DishController {
     }
 
     @PutMapping("/{id}/popular")
-    public ResponseEntity<Dish> markAsPopular(@PathVariable Long id) {
+    public ResponseEntity<DishResponseDTO> markAsPopular(@PathVariable Long id) {
         dishService.markAsPopular(id);
-        return ResponseEntity.ok(dishService.getDishById(id));
+        Dish dish = dishService.getDishById(id);
+        DishResponseDTO responseDTO = DishDtoConverter.convertToDto(dish);
+        return ResponseEntity.ok(responseDTO);
     }
 }
