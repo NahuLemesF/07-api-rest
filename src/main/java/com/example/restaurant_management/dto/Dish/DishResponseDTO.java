@@ -12,5 +12,6 @@ public class DishResponseDTO {
     private String description;
     private Float price;
     private Boolean isPopular;
+    private Long menuId;
 
 }

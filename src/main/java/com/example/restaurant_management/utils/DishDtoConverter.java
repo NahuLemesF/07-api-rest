@@ -14,6 +14,7 @@ public class DishDtoConverter {
         dto.setDescription(dish.getDescription());
         dto.setPrice(dish.getPrice());
         dto.setIsPopular(dish.getIsPopular());
+        dto.setMenuId(dish.getMenu().getId());
         return dto;
     }
 
