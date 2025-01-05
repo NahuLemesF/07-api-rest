@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/menus")
+@RequestMapping("/menus")
 public class MenuController {
 
     private final MenuService menuService;
@@ -36,12 +36,12 @@ public class MenuController {
         Menu menu = MenuDtoConverter.convertToEntity(menuRequestDTO, dishes);
         menuService.addMenu(menu);
         MenuResponseDTO responseDTO = MenuDtoConverter.convertToDto(menu);
-        return ResponseEntity.status(201).body(responseDTO);
+        return ResponseEntity.ok(responseDTO);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<MenuResponseDTO> getMenuById(@PathVariable Long id) {
-        Menu menu = menuService.getMenuById(id);
+    @GetMapping("/{menuId}")
+    public ResponseEntity<MenuResponseDTO> getMenuById(@PathVariable Long menuId) {
+        Menu menu = menuService.getMenuById(menuId);
         MenuResponseDTO responseDTO = MenuDtoConverter.convertToDto(menu);
         return ResponseEntity.ok(responseDTO);
     }
@@ -55,20 +55,20 @@ public class MenuController {
         return ResponseEntity.ok(responseDTOs);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<MenuResponseDTO> updateMenu(@PathVariable Long id, @RequestBody @Valid MenuRequestDTO menuRequestDTO) {
+    @PutMapping("/{menuId}")
+    public ResponseEntity<MenuResponseDTO> updateMenu(@PathVariable Long menuId, @RequestBody @Valid MenuRequestDTO menuRequestDTO) {
         List<Dish> dishes = menuRequestDTO.getDishIds().stream()
                 .map(dishService::getDishById)
                 .collect(Collectors.toList());
         Menu menuEntity = MenuDtoConverter.convertToEntity(menuRequestDTO, dishes);
-        Menu updatedMenu = menuService.updateMenu(id, menuEntity);
+        Menu updatedMenu = menuService.updateMenu(menuId, menuEntity);
         MenuResponseDTO responseDTO = MenuDtoConverter.convertToDto(updatedMenu);
         return ResponseEntity.ok(responseDTO);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteMenu(@PathVariable Long id) {
-        menuService.deleteMenu(id);
+    @DeleteMapping("/{menuId}")
+    public ResponseEntity<Void> deleteMenu(@PathVariable Long menuId) {
+        menuService.deleteMenu(menuId);
         return ResponseEntity.noContent().build();
     }
 }

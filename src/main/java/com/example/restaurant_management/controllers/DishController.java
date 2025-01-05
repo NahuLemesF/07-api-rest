@@ -3,7 +3,9 @@ package com.example.restaurant_management.controllers;
 import com.example.restaurant_management.dto.Dish.DishRequestDTO;
 import com.example.restaurant_management.dto.Dish.DishResponseDTO;
 import com.example.restaurant_management.models.Dish;
+import com.example.restaurant_management.models.Menu;
 import com.example.restaurant_management.services.DishService;
+import com.example.restaurant_management.services.MenuService;
 import com.example.restaurant_management.utils.DishDtoConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,19 +16,22 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/dishes")
+@RequestMapping("/dishes")
 public class DishController {
 
     private final DishService dishService;
+    private final MenuService menuService;
 
     @Autowired
-    public DishController(DishService dishService) {
+    public DishController(DishService dishService, MenuService menuService) {
         this.dishService = dishService;
+        this.menuService = menuService;
     }
 
     @PostMapping
     public ResponseEntity<DishResponseDTO> addDish(@RequestBody @Valid DishRequestDTO dishRequestDTO) {
-        Dish dish = DishDtoConverter.convertToEntity(dishRequestDTO);
+        Menu menu = menuService.getMenuById(dishRequestDTO.getMenuId());
+        Dish dish = DishDtoConverter.convertToEntity(dishRequestDTO, menu);
         dishService.addDish(dish);
         DishResponseDTO responseDTO = DishDtoConverter.convertToDto(dish);
         return ResponseEntity.status(201).body(responseDTO);
@@ -50,11 +55,13 @@ public class DishController {
 
     @PutMapping("/{id}")
     public ResponseEntity<DishResponseDTO> updateDish(@PathVariable Long id, @RequestBody @Valid DishRequestDTO dishRequestDTO) {
-        Dish dishEntity = DishDtoConverter.convertToEntity(dishRequestDTO);
+        Menu menu = menuService.getMenuById(dishRequestDTO.getMenuId());
+        Dish dishEntity = DishDtoConverter.convertToEntity(dishRequestDTO, menu);
         Dish updatedDish = dishService.updateDish(id, dishEntity);
         DishResponseDTO responseDTO = DishDtoConverter.convertToDto(updatedDish);
         return ResponseEntity.ok(responseDTO);
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteDish(@PathVariable Long id) {

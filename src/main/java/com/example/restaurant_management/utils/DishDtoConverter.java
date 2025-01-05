@@ -3,6 +3,7 @@ package com.example.restaurant_management.utils;
 import com.example.restaurant_management.dto.Dish.DishRequestDTO;
 import com.example.restaurant_management.dto.Dish.DishResponseDTO;
 import com.example.restaurant_management.models.Dish;
+import com.example.restaurant_management.models.Menu;
 
 public class DishDtoConverter {
 
@@ -16,11 +17,12 @@ public class DishDtoConverter {
         return dto;
     }
 
-    public static Dish convertToEntity(DishRequestDTO dto) {
+    public static Dish convertToEntity(DishRequestDTO dto, Menu menu) {
         Dish dish = new Dish();
         dish.setName(dto.getName());
         dish.setDescription(dto.getDescription());
         dish.setPrice(dto.getPrice());
+        dish.setMenu(menu);
         return dish;
     }
 }

@@ -17,4 +17,7 @@ public class DishRequestDTO {
     @NotNull(message = "El precio es obligatorio")
     private Float price;
 
+    @NotNull(message = "El ID del menú es obligatorio")
+    private Long menuId;
+
 }
