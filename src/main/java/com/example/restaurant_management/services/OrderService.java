@@ -1,5 +1,6 @@
 package com.example.restaurant_management.services;
 
+import com.example.restaurant_management.handlers.OrderProcessingChain;
 import com.example.restaurant_management.models.Client;
 import com.example.restaurant_management.models.Dish;
 import com.example.restaurant_management.models.Order;
@@ -14,33 +15,38 @@ import java.util.stream.Collectors;
 @Service
 public class OrderService {
 
+
     private final OrderRepository orderRepository;
     private final ClientService clientService;
     private final DishService dishService;
+    private final OrderProcessingChain orderProcessingChain;
 
     @Autowired
-    public OrderService(OrderRepository orderRepository, ClientService clientService, DishService dishService) {
+    public OrderService(OrderRepository orderRepository, ClientService clientService, DishService dishService, OrderProcessingChain orderProcessingChain) {
         this.orderRepository = orderRepository;
         this.clientService = clientService;
         this.dishService = dishService;
+        this.orderProcessingChain = orderProcessingChain;
     }
 
     public Order createOrder(Long clientId, List<Long> dishIds) {
         Client client = clientService.getClientById(clientId);
-        clientService.checkAndMarkFrequent(client);
 
         List<Dish> dishes = dishIds.stream()
                 .map(dishService::getDishById)
                 .collect(Collectors.toList());
 
-        dishService.checkIsPopular(dishes);
 
-        float totalPrice = calculateTotalPrice(dishes, client.getIsFrequent());
         Order order = new Order();
         order.setClient(client);
         order.setDishes(dishes);
-        order.setTotalPrice(totalPrice);
         order.setOrderDate(LocalDateTime.now());
+
+        orderProcessingChain.process(order);
+
+        float totalPrice = calculateTotalPrice(order.getDishes(), order.getClient().getIsFrequent());
+        order.setTotalPrice(totalPrice);
+
         return orderRepository.save(order);
     }
 
