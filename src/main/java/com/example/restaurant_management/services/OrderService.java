@@ -32,8 +32,10 @@ public class OrderService {
         List<Dish> dishes = dishIds.stream()
                 .map(dishService::getDishById)
                 .collect(Collectors.toList());
-        float totalPrice = calculateTotalPrice(dishes, client.getIsFrequent());
 
+        dishService.checkIsPopular(dishes);
+
+        float totalPrice = calculateTotalPrice(dishes, client.getIsFrequent());
         Order order = new Order();
         order.setClient(client);
         order.setDishes(dishes);
@@ -67,13 +69,28 @@ public class OrderService {
 
     private Float calculateTotalPrice(List<Dish> dishes, Boolean isFrequent) {
         float totalPrice = (float) dishes.stream()
-                .mapToDouble(Dish::getPrice)
+                .mapToDouble(dish -> {
+                    float price = dish.getPrice();
+                    return checkIsPopular(dish, price);
+                })
                 .sum();
 
+        totalPrice = checkIsFrequent(isFrequent, totalPrice);
+        return totalPrice;
+    }
+
+    private static float checkIsFrequent(Boolean isFrequent, float totalPrice) {
         if (Boolean.TRUE.equals(isFrequent)) {
             totalPrice *= 0.9762F;
         }
         return totalPrice;
+    }
+
+    private static float checkIsPopular(Dish dish, float price) {
+        if (Boolean.TRUE.equals(dish.getIsPopular())) {
+            return price * 1.0573F;
+        }
+        return price;
     }
 
 

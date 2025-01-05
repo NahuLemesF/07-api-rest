@@ -2,6 +2,7 @@ package com.example.restaurant_management.services;
 
 import com.example.restaurant_management.models.Client;
 import com.example.restaurant_management.repositories.ClientRepository;
+import com.example.restaurant_management.repositories.OrderRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,13 +14,12 @@ import java.util.List;
 public class ClientService {
 
     private final ClientRepository clientRepository;
-
-    @PersistenceContext
-    private EntityManager entityManager;
+    private final OrderRepository orderRepository;
 
     @Autowired
-    public ClientService(ClientRepository clientRepository) {
+    public ClientService(ClientRepository clientRepository, OrderRepository orderRepository) {
         this.clientRepository = clientRepository;
+        this.orderRepository = orderRepository;
     }
 
     public void addClient(Client client) {
@@ -48,14 +48,12 @@ public class ClientService {
     }
 
     public void checkAndMarkFrequent(Client client) {
-        String query = "SELECT COUNT(o.id) FROM Order o WHERE o.client.id = :clientId";
-        long ordersCount = (long) entityManager.createQuery(query)
-                .setParameter("clientId", client.getId())
-                .getSingleResult();
+        long ordersCount = orderRepository.countOrdersByClientId(client.getId());
 
         if (ordersCount >= 10 && Boolean.TRUE.equals(!client.getIsFrequent())) {
             client.setIsFrequent(true);
             clientRepository.save(client);
         }
     }
+
 }

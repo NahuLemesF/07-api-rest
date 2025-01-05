@@ -68,12 +68,4 @@ public class DishController {
         dishService.deleteDish(id);
         return ResponseEntity.noContent().build();
     }
-
-    @PutMapping("/{id}/popular")
-    public ResponseEntity<DishResponseDTO> markAsPopular(@PathVariable Long id) {
-        dishService.markAsPopular(id);
-        Dish dish = dishService.getDishById(id);
-        DishResponseDTO responseDTO = DishDtoConverter.convertToDto(dish);
-        return ResponseEntity.ok(responseDTO);
-    }
 }
