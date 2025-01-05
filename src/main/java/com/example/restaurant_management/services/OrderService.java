@@ -7,6 +7,7 @@ import com.example.restaurant_management.repositories.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,6 +27,8 @@ public class OrderService {
 
     public Order createOrder(Long clientId, List<Long> dishIds) {
         Client client = clientService.getClientById(clientId);
+        clientService.checkAndMarkFrequent(client);
+        
         List<Dish> dishes = dishIds.stream()
                 .map(dishService::getDishById)
                 .collect(Collectors.toList());
@@ -35,6 +38,7 @@ public class OrderService {
         order.setClient(client);
         order.setDishes(dishes);
         order.setTotalPrice(totalPrice);
+        order.setOrderDate(LocalDateTime.now());
         return orderRepository.save(order);
     }
 
@@ -53,8 +57,11 @@ public class OrderService {
 
     public Order updateOrder(Long id, Order order) {
         Order existingOrder = getOrderById(id);
+
+        existingOrder.setClient(order.getClient());
         existingOrder.setDishes(order.getDishes());
         existingOrder.setTotalPrice(calculateTotalPrice(order.getDishes()));
+
         return orderRepository.save(existingOrder);
     }
 
@@ -63,4 +70,6 @@ public class OrderService {
                 .mapToDouble(Dish::getPrice)
                 .sum();
     }
+
+
 }

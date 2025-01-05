@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -34,14 +35,14 @@ public class Order {
             name = "order_dishes",
             joinColumns = @JoinColumn(name = "order_id"),
             inverseJoinColumns = @JoinColumn(name = "dish_id"))
-    private List<Dish> dishes;
+    private List<Dish> dishes = new ArrayList<>();
     private Float totalPrice;
 
     public Order(Client client, List<Dish> dishes, Long id, LocalDateTime orderDate, Float totalPrice) {
         this.client = client;
         this.dishes = dishes;
         this.id = id;
-        this.orderDate = orderDate;
+        this.orderDate = LocalDateTime.now();
         this.totalPrice = totalPrice;
     }
 

@@ -6,6 +6,7 @@ import com.example.restaurant_management.models.Order;
 import com.example.restaurant_management.models.Client;
 import com.example.restaurant_management.models.Dish;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,13 +18,14 @@ public class OrderDtoConverter {
         dto.setClientId(order.getClient().getId());
         dto.setDishIds(order.getDishes().stream().map(Dish::getId).collect(Collectors.toList()));
         dto.setTotalPrice(order.getTotalPrice());
+        dto.setOrderDate(order.getOrderDate());
         return dto;
     }
 
     public static Order convertToEntity(OrderRequestDTO dto, Client client, List<Dish> dishes) {
         Order order = new Order();
         order.setClient(client);
-        order.setDishes(dishes);
+        order.setDishes(new ArrayList<>(dishes));
         return order;
     }
 }
