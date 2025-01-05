@@ -5,6 +5,7 @@ import com.example.restaurant.dto.menu.MenuResponseDTO;
 import com.example.restaurant.models.Menu;
 import com.example.restaurant.models.Dish;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,7 +24,7 @@ public class MenuDtoConverter {
         Menu menu = new Menu();
         menu.setName(dto.getName());
         menu.setDescription(dto.getDescription());
-        menu.setDishes(dishes);
+        menu.setDishes(dishes != null ? dishes : Collections.emptyList());
         return menu;
     }
 }

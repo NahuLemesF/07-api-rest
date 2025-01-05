@@ -1,6 +1,9 @@
 package com.example.restaurant.models;
 
+import com.example.restaurant.constants.DishType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -21,10 +24,13 @@ public class Dish {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
     private String description;
     private Float price;
-    private Boolean isPopular = false;
+
+    @Enumerated(EnumType.STRING)
+    private DishType dishType = DishType.COMMON;
 
     @ManyToOne
     @JoinColumn(name = "menu_id", nullable = false)
@@ -33,12 +39,12 @@ public class Dish {
     @ManyToMany(mappedBy = "dishes")
     private List<Order> orders = new ArrayList<>();
 
-    public Dish(Long id, String name, String description, Float price, Boolean isPopular) {
+    public Dish(Long id, String name, String description, Float price, DishType dishType) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
-        this.isPopular = isPopular;
+        this.dishType = dishType;
     }
 
     public Dish() {

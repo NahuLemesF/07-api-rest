@@ -1,5 +1,6 @@
 package com.example.restaurant.services.client;
 
+import com.example.restaurant.constants.ClientType;
 import com.example.restaurant.models.Client;
 import com.example.restaurant.constants.EventType;
 import com.example.restaurant.observers.ClientSubject;
@@ -26,11 +27,15 @@ public class IsFrequentClientService implements ICommandParametrized<Void, Clien
     @Override
     public Void execute(Client client) {
         long ordersCount = orderRepository.countOrdersByClientId(client.getId());
-        if (ordersCount >= 10 && !Boolean.TRUE.equals(client.getIsFrequent())) {
-            client.setIsFrequent(true);
+        saveIsFrequentClient(client, ordersCount);
+        return null;
+    }
+
+    private void saveIsFrequentClient(Client client, long ordersCount) {
+        if (ordersCount >= 10) {
+            client.setClientType(ClientType.FREQUENT);
             clientRepository.save(client);
             clientSubject.notifyObservers(EventType.UPDATE, client);
         }
-        return null;
     }
 }

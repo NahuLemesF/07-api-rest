@@ -1,6 +1,8 @@
 package com.example.restaurant.services.order;
 
 import com.example.restaurant.constants.EventType;
+import com.example.restaurant.constants.ClientType;
+import com.example.restaurant.constants.DishType;
 import com.example.restaurant.handlers.OrderProcessingChain;
 import com.example.restaurant.models.Client;
 import com.example.restaurant.models.Dish;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -50,7 +53,7 @@ public class CreateOrderService implements ICommandModifier<Order, List<Long>> {
 
         orderProcessingChain.process(order);
 
-        float totalPrice = calculateTotalPrice(dishes, client.getIsFrequent());
+        float totalPrice = calculateTotalPrice(dishes, client.getClientType());
         order.setTotalPrice(totalPrice);
 
         Order createdOrder = orderRepository.save(order);
@@ -58,23 +61,32 @@ public class CreateOrderService implements ICommandModifier<Order, List<Long>> {
         return createdOrder;
     }
 
-    private float calculateTotalPrice(List<Dish> dishes, Boolean isFrequent) {
+    private float calculateTotalPrice(List<Dish> dishes, ClientType clientType) {
         float totalPrice = (float) dishes.stream()
-                .mapToDouble(dish -> pricePopular(dish))
+                .mapToDouble(this::priceBasedOnDishType)
                 .sum();
-        totalPrice = priceFrequent(isFrequent, totalPrice);
+        totalPrice = priceBasedOnClientType(clientType, totalPrice);
 
         return totalPrice;
     }
 
-    private static float pricePopular(Dish dish) {
-        return Boolean.TRUE.equals(dish.getIsPopular()) ? dish.getPrice() * 1.0573F : dish.getPrice();
+    private static final Map<DishType, Float> DISH_TYPE_MULTIPLIER = Map.of(
+            DishType.POPULAR, 1.0573F,
+            DishType.COMMON, 1.0F
+    );
+
+    private float priceBasedOnDishType(Dish dish) {
+        return dish.getPrice() * DISH_TYPE_MULTIPLIER.getOrDefault(dish.getDishType(), 1.0F);
     }
 
-    private static float priceFrequent(Boolean isFrequent, float totalPrice) {
-        if (Boolean.TRUE.equals(isFrequent)) {
-            totalPrice *= 0.9762F;
-        }
-        return totalPrice;
+
+    private static final Map<ClientType, Float> CLIENT_TYPE_DISCOUNT = Map.of(
+            ClientType.FREQUENT, 0.9762F,
+            ClientType.COMMON, 1.0F
+    );
+
+    private float priceBasedOnClientType(ClientType clientType, float totalPrice) {
+        return totalPrice * CLIENT_TYPE_DISCOUNT.getOrDefault(clientType, 1.0F);
     }
+
 }

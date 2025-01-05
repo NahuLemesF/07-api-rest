@@ -1,5 +1,6 @@
 package com.example.restaurant.services.dish;
 
+import com.example.restaurant.constants.DishType;
 import com.example.restaurant.constants.EventType;
 import com.example.restaurant.models.Dish;
 import com.example.restaurant.observers.DishSubject;
@@ -35,15 +36,10 @@ public class IsPopularDishService implements ICommandParametrized<Void, List<Dis
     }
 
     private void markIsPopular(Dish dish, long orderCount) {
-        if (orderCount > 100) {
-            dish.setIsPopular(true);
-            dishPopularPrice(dish);
+        if (orderCount >= 100) {
+            dish.setDishType(DishType.POPULAR);
             dishRepository.save(dish);
             dishSubject.notifyObservers(EventType.UPDATE, dish);
         }
-    }
-
-    private static void dishPopularPrice(Dish dish) {
-        dish.setPrice(dish.getPrice() * 1.0573f);
     }
 }

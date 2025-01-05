@@ -12,7 +12,7 @@ public class ClientDtoConverter {
         dto.setName(client.getName());
         dto.setLastName(client.getLastName());
         dto.setEmail(client.getEmail());
-        dto.setIsFrequent(client.getIsFrequent());
+        dto.setClientType(client.getClientType().getName());
         return dto;
     }
 
