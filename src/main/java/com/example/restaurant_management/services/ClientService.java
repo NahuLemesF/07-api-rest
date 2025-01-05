@@ -1,10 +1,10 @@
 package com.example.restaurant_management.services;
 
 import com.example.restaurant_management.models.Client;
+import com.example.restaurant_management.observers.ClientSubject;
+import com.example.restaurant_management.constants.EventType;
 import com.example.restaurant_management.repositories.ClientRepository;
 import com.example.restaurant_management.repositories.OrderRepository;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,15 +15,18 @@ public class ClientService {
 
     private final ClientRepository clientRepository;
     private final OrderRepository orderRepository;
+    private final ClientSubject clientSubject;
 
     @Autowired
-    public ClientService(ClientRepository clientRepository, OrderRepository orderRepository) {
+    public ClientService(ClientRepository clientRepository, OrderRepository orderRepository, ClientSubject clientSubject) {
         this.clientRepository = clientRepository;
         this.orderRepository = orderRepository;
+        this.clientSubject = clientSubject;
     }
 
     public void addClient(Client client) {
         clientRepository.save(client);
+        clientSubject.notifyObservers(EventType.CREATE, client);
     }
 
     public Client getClientById(Long id) {
@@ -40,11 +43,15 @@ public class ClientService {
         existingClient.setName(client.getName());
         existingClient.setLastName(client.getLastName());
         existingClient.setEmail(client.getEmail());
-        return clientRepository.save(existingClient);
+        Client updatedClient = clientRepository.save(existingClient);
+        clientSubject.notifyObservers(EventType.UPDATE, updatedClient);
+        return updatedClient;
     }
 
     public void deleteClient(Long id) {
+        Client clientToDelete = getClientById(id);
         clientRepository.deleteById(id);
+        clientSubject.notifyObservers(EventType.DELETE, clientToDelete);
     }
 
     public void checkAndMarkFrequent(Client client) {
@@ -53,7 +60,7 @@ public class ClientService {
         if (ordersCount >= 10 && Boolean.TRUE.equals(!client.getIsFrequent())) {
             client.setIsFrequent(true);
             clientRepository.save(client);
+            clientSubject.notifyObservers(EventType.UPDATE, client);
         }
     }
-
 }

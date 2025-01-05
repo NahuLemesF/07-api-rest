@@ -1,6 +1,8 @@
 package com.example.restaurant_management.services;
 
+import com.example.restaurant_management.constants.EventType;
 import com.example.restaurant_management.models.Dish;
+import com.example.restaurant_management.observers.DishSubject;
 import com.example.restaurant_management.repositories.DishRepository;
 import com.example.restaurant_management.repositories.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,15 +15,18 @@ public class DishService {
 
     private final DishRepository dishRepository;
     private final OrderRepository orderRepository;
+    private final DishSubject dishSubject;
 
     @Autowired
-    public DishService(DishRepository dishRepository, OrderRepository orderRepository) {
+    public DishService(DishRepository dishRepository, OrderRepository orderRepository, DishSubject dishSubject) {
         this.dishRepository = dishRepository;
         this.orderRepository = orderRepository;
+        this.dishSubject = dishSubject;
     }
 
     public void addDish(Dish dish) {
         dishRepository.save(dish);
+        dishSubject.notifyObservers(EventType.CREATE, dish);
     }
 
     public Dish getDishById(Long id) {
@@ -37,11 +42,15 @@ public class DishService {
         Dish existingDish = getDishById(id);
         existingDish.setName(dish.getName());
         existingDish.setPrice(dish.getPrice());
-        return dishRepository.save(existingDish);
+        Dish updatedDish = dishRepository.save(existingDish);
+        dishSubject.notifyObservers(EventType.UPDATE, updatedDish);
+        return updatedDish;
     }
 
     public void deleteDish(Long id) {
+        Dish dishToDelete = getDishById(id);
         dishRepository.deleteById(id);
+        dishSubject.notifyObservers(EventType.DELETE, dishToDelete);
     }
 
     public void checkIsPopular(List<Dish> dishes) {
@@ -50,6 +59,9 @@ public class DishService {
 
             markIsPopular(dish, orderCount);
             dishRepository.save(dish);
+            if (dish.getIsPopular()) {
+                dishSubject.notifyObservers(EventType.UPDATE, dish);
+            }
         });
     }
 

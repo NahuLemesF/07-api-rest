@@ -4,6 +4,8 @@ import com.example.restaurant_management.handlers.OrderProcessingChain;
 import com.example.restaurant_management.models.Client;
 import com.example.restaurant_management.models.Dish;
 import com.example.restaurant_management.models.Order;
+import com.example.restaurant_management.observers.OrderSubject;
+import com.example.restaurant_management.constants.EventType;
 import com.example.restaurant_management.repositories.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,18 +17,19 @@ import java.util.stream.Collectors;
 @Service
 public class OrderService {
 
-
     private final OrderRepository orderRepository;
     private final ClientService clientService;
     private final DishService dishService;
     private final OrderProcessingChain orderProcessingChain;
+    private final OrderSubject orderSubject;
 
     @Autowired
-    public OrderService(OrderRepository orderRepository, ClientService clientService, DishService dishService, OrderProcessingChain orderProcessingChain) {
+    public OrderService(OrderRepository orderRepository, ClientService clientService, DishService dishService, OrderProcessingChain orderProcessingChain, OrderSubject orderSubject) {
         this.orderRepository = orderRepository;
         this.clientService = clientService;
         this.dishService = dishService;
         this.orderProcessingChain = orderProcessingChain;
+        this.orderSubject = orderSubject;
     }
 
     public Order createOrder(Long clientId, List<Long> dishIds) {
@@ -35,7 +38,6 @@ public class OrderService {
         List<Dish> dishes = dishIds.stream()
                 .map(dishService::getDishById)
                 .collect(Collectors.toList());
-
 
         Order order = new Order();
         order.setClient(client);
@@ -47,7 +49,9 @@ public class OrderService {
         float totalPrice = calculateTotalPrice(order.getDishes(), order.getClient().getIsFrequent());
         order.setTotalPrice(totalPrice);
 
-        return orderRepository.save(order);
+        Order createdOrder = orderRepository.save(order);
+        orderSubject.notifyObservers(EventType.CREATE, createdOrder);
+        return createdOrder;
     }
 
     public Order getOrderById(Long id) {
@@ -60,7 +64,9 @@ public class OrderService {
     }
 
     public void deleteOrder(Long id) {
+        Order orderToDelete = getOrderById(id);
         orderRepository.deleteById(id);
+        orderSubject.notifyObservers(EventType.DELETE, orderToDelete);
     }
 
     public Order updateOrder(Long id, Order order) {
@@ -70,7 +76,9 @@ public class OrderService {
         existingOrder.setDishes(order.getDishes());
         existingOrder.setTotalPrice(calculateTotalPrice(order.getDishes(), order.getClient().getIsFrequent()));
 
-        return orderRepository.save(existingOrder);
+        Order updatedOrder = orderRepository.save(existingOrder);
+        orderSubject.notifyObservers(EventType.UPDATE, updatedOrder);
+        return updatedOrder;
     }
 
     private Float calculateTotalPrice(List<Dish> dishes, Boolean isFrequent) {
@@ -93,11 +101,6 @@ public class OrderService {
     }
 
     private static float checkIsPopular(Dish dish, float price) {
-        if (Boolean.TRUE.equals(dish.getIsPopular())) {
-            return price * 1.0573F;
-        }
-        return price;
+        return Boolean.TRUE.equals(dish.getIsPopular()) ? price * 1.0573F : price;
     }
-
-
 }
