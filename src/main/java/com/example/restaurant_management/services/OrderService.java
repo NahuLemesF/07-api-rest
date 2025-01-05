@@ -28,11 +28,11 @@ public class OrderService {
     public Order createOrder(Long clientId, List<Long> dishIds) {
         Client client = clientService.getClientById(clientId);
         clientService.checkAndMarkFrequent(client);
-        
+
         List<Dish> dishes = dishIds.stream()
                 .map(dishService::getDishById)
                 .collect(Collectors.toList());
-        float totalPrice = calculateTotalPrice(dishes);
+        float totalPrice = calculateTotalPrice(dishes, client.getIsFrequent());
 
         Order order = new Order();
         order.setClient(client);
@@ -60,15 +60,20 @@ public class OrderService {
 
         existingOrder.setClient(order.getClient());
         existingOrder.setDishes(order.getDishes());
-        existingOrder.setTotalPrice(calculateTotalPrice(order.getDishes()));
+        existingOrder.setTotalPrice(calculateTotalPrice(order.getDishes(), order.getClient().getIsFrequent()));
 
         return orderRepository.save(existingOrder);
     }
 
-    private float calculateTotalPrice(List<Dish> dishes) {
-        return (float) dishes.stream()
+    private Float calculateTotalPrice(List<Dish> dishes, Boolean isFrequent) {
+        float totalPrice = (float) dishes.stream()
                 .mapToDouble(Dish::getPrice)
                 .sum();
+
+        if (Boolean.TRUE.equals(isFrequent)) {
+            totalPrice *= 0.9762F;
+        }
+        return totalPrice;
     }
 
 

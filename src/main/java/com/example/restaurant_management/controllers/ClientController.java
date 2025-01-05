@@ -67,12 +67,4 @@ public class ClientController {
         clientService.deleteClient(id);
         return ResponseEntity.noContent().build();
     }
-
-    @PutMapping("/{id}/frequent")
-    public ResponseEntity<ClientResponseDTO> markAsFrequent(@PathVariable Long id) {
-        clientService.markAsFrequent(id);
-        Client client = clientService.getClientById(id);
-        ClientResponseDTO responseDTO = ClientDtoConverter.convertToDto(client);
-        return ResponseEntity.ok(responseDTO);
-    }
 }

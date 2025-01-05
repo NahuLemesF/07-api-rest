@@ -47,15 +47,13 @@ public class ClientService {
         clientRepository.deleteById(id);
     }
 
-
-
     public void checkAndMarkFrequent(Client client) {
         String query = "SELECT COUNT(o.id) FROM Order o WHERE o.client.id = :clientId";
         long ordersCount = (long) entityManager.createQuery(query)
                 .setParameter("clientId", client.getId())
                 .getSingleResult();
 
-        if (ordersCount >= 10 && !client.getIsFrequent()) {
+        if (ordersCount >= 10 && Boolean.TRUE.equals(!client.getIsFrequent())) {
             client.setIsFrequent(true);
             clientRepository.save(client);
         }
