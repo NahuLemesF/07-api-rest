@@ -1,9 +1,10 @@
-package com.example.restaurant.utils;
+package com.example.restaurant.utils.converter;
 
 import com.example.restaurant.dto.order.OrderResponseDTO;
 import com.example.restaurant.models.Order;
 import com.example.restaurant.models.Client;
 import com.example.restaurant.models.Dish;
+import com.example.restaurant.utils.RoundToTwoDecimals;
 
 import java.util.ArrayList;
 import java.util.List;

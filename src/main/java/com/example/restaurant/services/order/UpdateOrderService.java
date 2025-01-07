@@ -5,6 +5,8 @@ import com.example.restaurant.models.Order;
 import com.example.restaurant.observers.OrderSubject;
 import com.example.restaurant.repositories.OrderRepository;
 import com.example.restaurant.services.interfaces.ICommandModifier;
+import com.example.restaurant.utils.OrderPriceCalculator;
+import com.example.restaurant.handlers.OrderProcessingChain;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,11 +15,13 @@ public class UpdateOrderService implements ICommandModifier<Order, Order> {
 
     private final OrderRepository orderRepository;
     private final OrderSubject orderSubject;
+    private final OrderProcessingChain orderProcessingChain;
 
     @Autowired
-    public UpdateOrderService(OrderRepository orderRepository, OrderSubject orderSubject) {
+    public UpdateOrderService(OrderRepository orderRepository, OrderSubject orderSubject, OrderProcessingChain orderProcessingChain) {
         this.orderRepository = orderRepository;
         this.orderSubject = orderSubject;
+        this.orderProcessingChain = orderProcessingChain;
     }
 
     @Override
@@ -27,7 +31,11 @@ public class UpdateOrderService implements ICommandModifier<Order, Order> {
 
         existingOrder.setClient(updatedOrder.getClient());
         existingOrder.setDishes(updatedOrder.getDishes());
-        existingOrder.setTotalPrice(updatedOrder.getTotalPrice());
+
+        orderProcessingChain.process(existingOrder);
+
+        float totalPrice = OrderPriceCalculator.calculateTotalPrice(existingOrder.getDishes(), existingOrder.getClient().getClientType());
+        existingOrder.setTotalPrice(totalPrice);
 
         Order savedOrder = orderRepository.save(existingOrder);
         orderSubject.notifyObservers(EventType.UPDATE, savedOrder);

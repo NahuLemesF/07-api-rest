@@ -26,10 +26,14 @@ public class UpdateDishService implements ICommandModifier<Dish, Dish> {
                 .orElseThrow(() -> new RuntimeException("Plato con el id " + id + " no encontrado"));
 
         existingDish.setName(dish.getName());
+        existingDish.setDescription(dish.getDescription());
         existingDish.setPrice(dish.getPrice());
+        existingDish.setMenu(dish.getMenu());
+
         Dish updatedDish = dishRepository.save(existingDish);
 
         dishSubject.notifyObservers(EventType.UPDATE, updatedDish);
         return updatedDish;
     }
+
 }

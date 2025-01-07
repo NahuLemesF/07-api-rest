@@ -1,9 +1,6 @@
 package com.example.restaurant.services.order;
 
 import com.example.restaurant.constants.EventType;
-import com.example.restaurant.constants.ClientType;
-import com.example.restaurant.constants.DishType;
-import com.example.restaurant.handlers.OrderProcessingChain;
 import com.example.restaurant.models.Client;
 import com.example.restaurant.models.Dish;
 import com.example.restaurant.models.Order;
@@ -12,12 +9,13 @@ import com.example.restaurant.repositories.OrderRepository;
 import com.example.restaurant.services.client.GetClientByIdService;
 import com.example.restaurant.services.dish.GetDishByIdService;
 import com.example.restaurant.services.interfaces.ICommandModifier;
+import com.example.restaurant.utils.OrderPriceCalculator;
+import com.example.restaurant.handlers.OrderProcessingChain;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,16 +24,16 @@ public class CreateOrderService implements ICommandModifier<Order, List<Long>> {
     private final OrderRepository orderRepository;
     private final GetClientByIdService getClientByIdService;
     private final GetDishByIdService getDishByIdService;
-    private final OrderProcessingChain orderProcessingChain;
     private final OrderSubject orderSubject;
+    private final OrderProcessingChain orderProcessingChain;
 
     @Autowired
-    public CreateOrderService(OrderRepository orderRepository, GetClientByIdService getClientByIdService, GetDishByIdService getDishByIdService, OrderProcessingChain orderProcessingChain, OrderSubject orderSubject) {
+    public CreateOrderService(OrderRepository orderRepository, GetClientByIdService getClientByIdService, GetDishByIdService getDishByIdService, OrderSubject orderSubject, OrderProcessingChain orderProcessingChain) {
         this.orderRepository = orderRepository;
         this.getClientByIdService = getClientByIdService;
         this.getDishByIdService = getDishByIdService;
-        this.orderProcessingChain = orderProcessingChain;
         this.orderSubject = orderSubject;
+        this.orderProcessingChain = orderProcessingChain;
     }
 
     @Override
@@ -53,40 +51,11 @@ public class CreateOrderService implements ICommandModifier<Order, List<Long>> {
 
         orderProcessingChain.process(order);
 
-        float totalPrice = calculateTotalPrice(dishes, client.getClientType());
+        float totalPrice = OrderPriceCalculator.calculateTotalPrice(dishes, client.getClientType());
         order.setTotalPrice(totalPrice);
 
         Order createdOrder = orderRepository.save(order);
         orderSubject.notifyObservers(EventType.CREATE, createdOrder);
         return createdOrder;
     }
-
-    private float calculateTotalPrice(List<Dish> dishes, ClientType clientType) {
-        float totalPrice = (float) dishes.stream()
-                .mapToDouble(this::priceBasedOnDishType)
-                .sum();
-        totalPrice = priceBasedOnClientType(clientType, totalPrice);
-
-        return totalPrice;
-    }
-
-    private static final Map<DishType, Float> DISH_TYPE_MULTIPLIER = Map.of(
-            DishType.POPULAR, 1.0573F,
-            DishType.COMMON, 1.0F
-    );
-
-    private float priceBasedOnDishType(Dish dish) {
-        return dish.getPrice() * DISH_TYPE_MULTIPLIER.getOrDefault(dish.getDishType(), 1.0F);
-    }
-
-
-    private static final Map<ClientType, Float> CLIENT_TYPE_DISCOUNT = Map.of(
-            ClientType.FREQUENT, 0.9762F,
-            ClientType.COMMON, 1.0F
-    );
-
-    private float priceBasedOnClientType(ClientType clientType, float totalPrice) {
-        return totalPrice * CLIENT_TYPE_DISCOUNT.getOrDefault(clientType, 1.0F);
-    }
-
 }

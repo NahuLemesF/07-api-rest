@@ -12,6 +12,7 @@ public class DishRequestDTO {
     @NotBlank(message = "El nombre es obligatorio")
     private String name;
 
+    @NotBlank(message = "La descripción es obligatoria")
     private String description;
 
     @NotNull(message = "El precio es obligatorio")

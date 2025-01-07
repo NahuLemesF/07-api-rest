@@ -10,7 +10,7 @@ import com.example.restaurant.services.menu.DeleteMenuService;
 import com.example.restaurant.services.menu.GetAllMenusService;
 import com.example.restaurant.services.menu.GetMenuByIdService;
 import com.example.restaurant.services.menu.UpdateMenuService;
-import com.example.restaurant.utils.MenuDtoConverter;
+import com.example.restaurant.utils.converter.MenuDtoConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

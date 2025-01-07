@@ -10,7 +10,7 @@ import com.example.restaurant.services.order.DeleteOrderService;
 import com.example.restaurant.services.order.GetAllOrdersService;
 import com.example.restaurant.services.order.GetOrderByIdService;
 import com.example.restaurant.services.order.UpdateOrderService;
-import com.example.restaurant.utils.OrderDtoConverter;
+import com.example.restaurant.utils.converter.OrderDtoConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

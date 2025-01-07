@@ -8,7 +8,7 @@ import com.example.restaurant.services.client.DeleteClientService;
 import com.example.restaurant.services.client.GetAllClientsService;
 import com.example.restaurant.services.client.GetClientByIdService;
 import com.example.restaurant.services.client.UpdateClientService;
-import com.example.restaurant.utils.ClientDtoConverter;
+import com.example.restaurant.utils.converter.ClientDtoConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;

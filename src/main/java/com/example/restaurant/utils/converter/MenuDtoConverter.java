@@ -1,4 +1,4 @@
-package com.example.restaurant.utils;
+package com.example.restaurant.utils.converter;
 
 import com.example.restaurant.dto.menu.MenuRequestDTO;
 import com.example.restaurant.dto.menu.MenuResponseDTO;

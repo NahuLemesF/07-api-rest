@@ -11,7 +11,7 @@ import com.example.restaurant.services.dish.GetDishByIdService;
 import com.example.restaurant.services.dish.IsPopularDishService;
 import com.example.restaurant.services.dish.UpdateDishService;
 import com.example.restaurant.services.menu.GetMenuByIdService;
-import com.example.restaurant.utils.DishDtoConverter;
+import com.example.restaurant.utils.converter.DishDtoConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
