@@ -43,7 +43,6 @@ public class OrderController {
     @PostMapping
     public ResponseEntity<OrderResponseDTO> createOrder(@RequestBody @Valid OrderRequestDTO orderRequestDTO) {
         Order orderEntity = OrderDtoConverter.convertToEntity(
-                orderRequestDTO,
                 getClientByIdService.execute(orderRequestDTO.getClientId()),
                 orderRequestDTO.getDishIds().stream().map(getDishByIdService::execute).toList()
         );
@@ -77,7 +76,6 @@ public class OrderController {
     @PutMapping("/{id}")
     public ResponseEntity<OrderResponseDTO> updateOrder(@PathVariable Long id, @RequestBody @Valid OrderRequestDTO orderRequestDTO) {
         Order orderEntity = OrderDtoConverter.convertToEntity(
-                orderRequestDTO,
                 getClientByIdService.execute(orderRequestDTO.getClientId()),
                 orderRequestDTO.getDishIds().stream().map(getDishByIdService::execute).toList()
         );

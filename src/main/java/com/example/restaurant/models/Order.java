@@ -24,7 +24,8 @@ public class Order {
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private Long id;
-    private LocalDateTime orderDate;
+
+    private LocalDateTime orderDate = LocalDateTime.now();
 
     @ManyToOne
     @JoinColumn(name = "client_id", nullable = false)
@@ -36,13 +37,13 @@ public class Order {
             joinColumns = @JoinColumn(name = "order_id"),
             inverseJoinColumns = @JoinColumn(name = "dish_id"))
     private List<Dish> dishes = new ArrayList<>();
-    private Float totalPrice;
 
-    public Order(Client client, List<Dish> dishes, Long id, LocalDateTime orderDate, Float totalPrice) {
+    private Float totalPrice = 0.0f;
+
+    public Order(Client client, List<Dish> dishes, Long id, Float totalPrice) {
         this.client = client;
         this.dishes = dishes;
         this.id = id;
-        this.orderDate = LocalDateTime.now();
         this.totalPrice = totalPrice;
     }
 

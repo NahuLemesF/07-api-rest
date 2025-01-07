@@ -1,7 +1,8 @@
 package com.example.restaurant.constants;
 
+
 public enum DishType {
-    COMMON("Common"),
+    COMMON("Comun"),
     POPULAR("Popular");
 
     private final String name;

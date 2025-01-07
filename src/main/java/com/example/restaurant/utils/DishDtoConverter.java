@@ -16,7 +16,7 @@ public class DishDtoConverter {
         dto.setName(dish.getName());
         dto.setDescription(dish.getDescription());
         dto.setPrice(RoundToTwoDecimals.roundToTwoDecimals(dish.getPrice()));
-        dto.setDishType(dish.getDishType());
+        dto.setDishType(dish.getDishType().getName());
         dto.setMenuId(dish.getMenu().getId());
         return dto;
     }

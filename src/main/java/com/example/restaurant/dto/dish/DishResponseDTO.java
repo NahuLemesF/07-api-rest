@@ -1,6 +1,5 @@
 package com.example.restaurant.dto.dish;
 
-import com.example.restaurant.constants.DishType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,7 +11,7 @@ public class DishResponseDTO {
     private String name;
     private String description;
     private Float price;
-    private DishType dishType;
+    private String dishType;
     private Long menuId;
 
 }

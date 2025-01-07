@@ -1,8 +1,8 @@
 package com.example.restaurant.constants;
 
 public enum ClientType {
-    COMMON("Common"),
-    FREQUENT("Frequent");
+    COMMON("Comun"),
+    FREQUENT("Frecuente");
 
     private final String name;
 

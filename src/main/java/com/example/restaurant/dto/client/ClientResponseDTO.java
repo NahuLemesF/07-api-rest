@@ -1,6 +1,5 @@
 package com.example.restaurant.dto.client;
 
-import com.example.restaurant.constants.ClientType;
 import lombok.Getter;
 import lombok.Setter;
 
