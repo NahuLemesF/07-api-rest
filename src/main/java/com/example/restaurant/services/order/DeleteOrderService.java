@@ -3,7 +3,7 @@ package com.example.restaurant.services.order;
 import com.example.restaurant.constants.EventType;
 import com.example.restaurant.models.Order;
 import com.example.restaurant.observers.OrderSubject;
-import com.example.restaurant.repositories.OrderRepository;
+import com.example.restaurant.repositories.IOrderRepository;
 import com.example.restaurant.services.interfaces.ICommandParametrized;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,11 +11,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class DeleteOrderService implements ICommandParametrized<Void, Long> {
 
-    private final OrderRepository orderRepository;
+    private final IOrderRepository orderRepository;
     private final OrderSubject orderSubject;
 
     @Autowired
-    public DeleteOrderService(OrderRepository orderRepository, OrderSubject orderSubject) {
+    public DeleteOrderService(IOrderRepository orderRepository, OrderSubject orderSubject) {
         this.orderRepository = orderRepository;
         this.orderSubject = orderSubject;
     }

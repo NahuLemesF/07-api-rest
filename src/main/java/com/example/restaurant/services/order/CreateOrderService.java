@@ -5,7 +5,7 @@ import com.example.restaurant.models.Client;
 import com.example.restaurant.models.Dish;
 import com.example.restaurant.models.Order;
 import com.example.restaurant.observers.OrderSubject;
-import com.example.restaurant.repositories.OrderRepository;
+import com.example.restaurant.repositories.IOrderRepository;
 import com.example.restaurant.services.client.GetClientByIdService;
 import com.example.restaurant.services.dish.GetDishByIdService;
 import com.example.restaurant.services.interfaces.ICommandModifier;
@@ -21,14 +21,14 @@ import java.util.stream.Collectors;
 @Service
 public class CreateOrderService implements ICommandModifier<Order, List<Long>> {
 
-    private final OrderRepository orderRepository;
+    private final IOrderRepository orderRepository;
     private final GetClientByIdService getClientByIdService;
     private final GetDishByIdService getDishByIdService;
     private final OrderSubject orderSubject;
     private final OrderProcessingChain orderProcessingChain;
 
     @Autowired
-    public CreateOrderService(OrderRepository orderRepository, GetClientByIdService getClientByIdService, GetDishByIdService getDishByIdService, OrderSubject orderSubject, OrderProcessingChain orderProcessingChain) {
+    public CreateOrderService(IOrderRepository orderRepository, GetClientByIdService getClientByIdService, GetDishByIdService getDishByIdService, OrderSubject orderSubject, OrderProcessingChain orderProcessingChain) {
         this.orderRepository = orderRepository;
         this.getClientByIdService = getClientByIdService;
         this.getDishByIdService = getDishByIdService;

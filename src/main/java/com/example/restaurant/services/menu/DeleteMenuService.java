@@ -3,7 +3,7 @@ package com.example.restaurant.services.menu;
 import com.example.restaurant.constants.EventType;
 import com.example.restaurant.models.Menu;
 import com.example.restaurant.observers.MenuSubject;
-import com.example.restaurant.repositories.MenuRepository;
+import com.example.restaurant.repositories.IMenuRepository;
 import com.example.restaurant.services.interfaces.ICommandParametrized;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,11 +11,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class DeleteMenuService implements ICommandParametrized<Void, Long> {
 
-    private final MenuRepository menuRepository;
+    private final IMenuRepository menuRepository;
     private final MenuSubject menuSubject;
 
     @Autowired
-    public DeleteMenuService(MenuRepository menuRepository, MenuSubject menuSubject) {
+    public DeleteMenuService(IMenuRepository menuRepository, MenuSubject menuSubject) {
         this.menuRepository = menuRepository;
         this.menuSubject = menuSubject;
     }

@@ -13,9 +13,16 @@ import com.example.restaurant.services.menu.UpdateMenuService;
 import com.example.restaurant.utils.converter.MenuDtoConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -33,12 +40,7 @@ public class MenuController {
     private final GetDishByIdService getDishByIdService;
 
     @Autowired
-    public MenuController(AddMenuService addMenuService,
-                          GetMenuByIdService getMenuByIdService,
-                          GetAllMenusService getAllMenusService,
-                          UpdateMenuService updateMenuService,
-                          DeleteMenuService deleteMenuService,
-                          GetDishByIdService getDishByIdService) {
+    public MenuController(AddMenuService addMenuService, GetMenuByIdService getMenuByIdService, GetAllMenusService getAllMenusService, UpdateMenuService updateMenuService, DeleteMenuService deleteMenuService, GetDishByIdService getDishByIdService) {
         this.addMenuService = addMenuService;
         this.getMenuByIdService = getMenuByIdService;
         this.getAllMenusService = getAllMenusService;

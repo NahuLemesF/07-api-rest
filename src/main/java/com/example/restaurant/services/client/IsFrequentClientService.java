@@ -4,8 +4,8 @@ import com.example.restaurant.constants.ClientType;
 import com.example.restaurant.models.Client;
 import com.example.restaurant.constants.EventType;
 import com.example.restaurant.observers.ClientSubject;
-import com.example.restaurant.repositories.ClientRepository;
-import com.example.restaurant.repositories.OrderRepository;
+import com.example.restaurant.repositories.IClientRepository;
+import com.example.restaurant.repositories.IOrderRepository;
 import com.example.restaurant.services.interfaces.ICommandParametrized;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,12 +13,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class IsFrequentClientService implements ICommandParametrized<Void, Client> {
 
-    private final OrderRepository orderRepository;
-    private final ClientRepository clientRepository;
+    private final IOrderRepository orderRepository;
+    private final IClientRepository clientRepository;
     private final ClientSubject clientSubject;
 
     @Autowired
-    public IsFrequentClientService(OrderRepository orderRepository, ClientRepository clientRepository, ClientSubject clientSubject) {
+    public IsFrequentClientService(IOrderRepository orderRepository, IClientRepository clientRepository, ClientSubject clientSubject) {
         this.orderRepository = orderRepository;
         this.clientRepository = clientRepository;
         this.clientSubject = clientSubject;
@@ -26,12 +26,12 @@ public class IsFrequentClientService implements ICommandParametrized<Void, Clien
 
     @Override
     public Void execute(Client client) {
-        long ordersCount = orderRepository.countOrdersByClientId(client.getId());
+        Long ordersCount = orderRepository.countByClientId(client.getId());
         saveIsFrequentClient(client, ordersCount);
         return null;
     }
 
-    private void saveIsFrequentClient(Client client, long ordersCount) {
+    private void saveIsFrequentClient(Client client, Long ordersCount) {
         if (ordersCount >= 10) {
             client.setClientType(ClientType.FREQUENT);
             clientRepository.save(client);
