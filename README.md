@@ -88,12 +88,29 @@ La aplicación estará disponible en: [http://localhost:8080/api/v1](http://loca
 
 ## Diagrama de Clases
 
+![image](https://github.com/user-attachments/assets/3ea543e7-8874-4aca-bf64-5317a3106ac8)
+
 El sistema cuenta con un diagrama UML que describe las relaciones entre las entidades:
 - Asociaciones: `1..*`, `0..*` según los requisitos del negocio.
 - Tipos de relaciones: composición y agregación.
 
 ---
 
+## Diagrama Relacional
+
+![image](https://github.com/user-attachments/assets/34293338-0d98-4ee2-a3d6-13aec99d0efb)
+
+El diagrama relacional representa las relaciones entre las tablas de la base de datos utilizadas en el sistema de gestión de restaurantes. 
+Este modelo incluye las claves primarias, claves foráneas y las relaciones (1:1, 1:N, N:M) entre las tablas.
+
+### Relación entre las tablas
+
+- **Client**: Relacionado con **Order** (1 Cliente puede tener 0 o más Órdenes).
+- **Order**: Relacionado con **Dish** (N:M) y con **Client** (N:1).
+- **Dish**: Relacionado con **Menu** (N:1) y **Order** (N:M).
+- **Menu**: Relacionado con **Dish** (1:N).
+
+---
 
 ## Autor
 Proyecto desarrollado por Nahu Lemes.
