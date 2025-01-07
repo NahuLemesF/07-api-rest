@@ -3,7 +3,7 @@ package com.example.restaurant.services.order;
 import com.example.restaurant.constants.EventType;
 import com.example.restaurant.models.Order;
 import com.example.restaurant.observers.OrderSubject;
-import com.example.restaurant.repositories.OrderRepository;
+import com.example.restaurant.repositories.IOrderRepository;
 import com.example.restaurant.services.interfaces.ICommandModifier;
 import com.example.restaurant.utils.OrderPriceCalculator;
 import com.example.restaurant.handlers.OrderProcessingChain;
@@ -13,12 +13,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class UpdateOrderService implements ICommandModifier<Order, Order> {
 
-    private final OrderRepository orderRepository;
+    private final IOrderRepository orderRepository;
     private final OrderSubject orderSubject;
     private final OrderProcessingChain orderProcessingChain;
 
     @Autowired
-    public UpdateOrderService(OrderRepository orderRepository, OrderSubject orderSubject, OrderProcessingChain orderProcessingChain) {
+    public UpdateOrderService(IOrderRepository orderRepository, OrderSubject orderSubject, OrderProcessingChain orderProcessingChain) {
         this.orderRepository = orderRepository;
         this.orderSubject = orderSubject;
         this.orderProcessingChain = orderProcessingChain;

@@ -1,5 +1,6 @@
 package com.example.restaurant.utils.converter;
 
+import com.example.restaurant.dto.dish.DishResponseDTO;
 import com.example.restaurant.dto.menu.MenuRequestDTO;
 import com.example.restaurant.dto.menu.MenuResponseDTO;
 import com.example.restaurant.models.Menu;
@@ -16,7 +17,9 @@ public class MenuDtoConverter {
         dto.setId(menu.getId());
         dto.setName(menu.getName());
         dto.setDescription(menu.getDescription());
-        dto.setDishIds(menu.getDishes().stream().map(Dish::getId).collect(Collectors.toList()));
+        dto.setDishes(menu.getDishes().stream()
+                .map(DishDtoConverter::convertToDto)
+                .collect(Collectors.toList()));
         return dto;
     }
 

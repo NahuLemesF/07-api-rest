@@ -12,6 +12,6 @@ public class DishResponseDTO {
     private String description;
     private Float price;
     private String dishType;
-    private Long menuId;
+    private String menuName;
 
 }

@@ -1,7 +1,7 @@
 package com.example.restaurant.services.menu;
 
 import com.example.restaurant.models.Menu;
-import com.example.restaurant.repositories.MenuRepository;
+import com.example.restaurant.repositories.IMenuRepository;
 import com.example.restaurant.services.interfaces.ICommandParametrized;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,16 +9,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class GetMenuByIdService implements ICommandParametrized<Menu, Long> {
 
-    private final MenuRepository menuRepository;
+    private final IMenuRepository IMenuRepository;
 
     @Autowired
-    public GetMenuByIdService(MenuRepository menuRepository) {
-        this.menuRepository = menuRepository;
+    public GetMenuByIdService(IMenuRepository IMenuRepository) {
+        this.IMenuRepository = IMenuRepository;
     }
 
     @Override
     public Menu execute(Long id) {
-        return menuRepository.findById(id)
+        return IMenuRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Menú con el id " + id + " no encontrado"));
     }
 }
