@@ -11,18 +11,18 @@ import org.springframework.stereotype.Service;
 @Service
 public class AddClientService implements ICommandParametrized<Client, Client> {
 
-    private final IClientRepository IClientRepository;
+    private final IClientRepository clientRepository;
     private final ClientSubject clientSubject;
 
     @Autowired
-    public AddClientService(IClientRepository IClientRepository, ClientSubject clientSubject) {
-        this.IClientRepository = IClientRepository;
+    public AddClientService(IClientRepository clientRepository, ClientSubject clientSubject) {
+        this.clientRepository = clientRepository;
         this.clientSubject = clientSubject;
     }
 
     @Override
     public Client execute(Client client) {
-        Client savedClient = IClientRepository.save(client);
+        Client savedClient = clientRepository.save(client);
         clientSubject.notifyObservers(EventType.CREATE, savedClient);
         return savedClient;
     }

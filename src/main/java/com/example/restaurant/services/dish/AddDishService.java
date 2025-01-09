@@ -9,21 +9,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AddDishService implements ICommandParametrized<Void, Dish> {
+public class AddDishService implements ICommandParametrized<Dish, Dish> {
 
-    private final IDishRepository IDishRepository;
+    private final IDishRepository dishRepository;
     private final DishSubject dishSubject;
 
     @Autowired
-    public AddDishService(IDishRepository IDishRepository, DishSubject dishSubject) {
-        this.IDishRepository = IDishRepository;
+    public AddDishService(IDishRepository dishRepository, DishSubject dishSubject) {
+        this.dishRepository = dishRepository;
         this.dishSubject = dishSubject;
     }
 
     @Override
-    public Void execute(Dish dish) {
-        IDishRepository.save(dish);
-        dishSubject.notifyObservers(EventType.CREATE, dish);
-        return null;
+    public Dish execute(Dish dish) {
+        Dish savedDish = dishRepository.save(dish);
+        dishSubject.notifyObservers(EventType.CREATE, savedDish);
+        return savedDish;
     }
 }

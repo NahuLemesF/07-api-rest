@@ -18,4 +18,6 @@ public class OrderResponseDTO {
     private Float totalPrice;
     private LocalDateTime orderDate;
 
+    public OrderResponseDTO() {
+    }
 }

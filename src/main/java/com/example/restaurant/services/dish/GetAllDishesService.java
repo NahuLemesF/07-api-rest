@@ -11,15 +11,15 @@ import java.util.List;
 @Service
 public class GetAllDishesService implements ICommand<List<Dish>> {
 
-    private final IDishRepository IDishRepository;
+    private final IDishRepository dishRepository;
 
     @Autowired
-    public GetAllDishesService(IDishRepository IDishRepository) {
-        this.IDishRepository = IDishRepository;
+    public GetAllDishesService(IDishRepository dishRepository) {
+        this.dishRepository = dishRepository;
     }
 
     @Override
     public List<Dish> execute() {
-        return IDishRepository.findAll();
+        return dishRepository.findAll();
     }
 }

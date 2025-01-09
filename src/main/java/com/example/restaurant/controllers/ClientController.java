@@ -43,11 +43,9 @@ public class ClientController {
     }
 
     @PostMapping
-    public ResponseEntity<ClientResponseDTO> addClient(@RequestBody ClientRequestDTO clientRequest) {
+    public ClientResponseDTO addClient(@RequestBody ClientRequestDTO clientRequest) {
         Client clientEntity = ClientDtoConverter.convertToEntity(clientRequest);
-        addClientService.execute(clientEntity);
-        ClientResponseDTO responseDTO = ClientDtoConverter.convertToDto(clientEntity);
-        return ResponseEntity.ok(responseDTO);
+        return ClientDtoConverter.convertToDto(addClientService.execute(clientEntity));
     }
 
     @GetMapping("/{id}")

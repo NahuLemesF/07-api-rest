@@ -15,13 +15,13 @@ import java.util.List;
 @Service
 public class IsPopularDishService implements ICommandParametrized<Void, List<Dish>> {
 
-    private final IDishRepository IDishRepository;
+    private final IDishRepository dishRepository;
     private final IOrderRepository orderRepository;
     private final DishSubject dishSubject;
 
     @Autowired
-    public IsPopularDishService(IDishRepository IDishRepository, IOrderRepository orderRepository, DishSubject dishSubject) {
-        this.IDishRepository = IDishRepository;
+    public IsPopularDishService(IDishRepository dishRepository, IOrderRepository orderRepository, DishSubject dishSubject) {
+        this.dishRepository = dishRepository;
         this.orderRepository = orderRepository;
         this.dishSubject = dishSubject;
     }
@@ -38,7 +38,7 @@ public class IsPopularDishService implements ICommandParametrized<Void, List<Dis
     private void markIsPopular(Dish dish, Long orderCount) {
         if (orderCount >= 100) {
             dish.setDishType(DishType.POPULAR);
-            IDishRepository.save(dish);
+            dishRepository.save(dish);
             dishSubject.notifyObservers(EventType.UPDATE, dish);
         }
     }

@@ -11,15 +11,15 @@ import java.util.List;
 @Service
 public class GetAllMenusService implements ICommand<List<Menu>> {
 
-    private final IMenuRepository IMenuRepository;
+    private final IMenuRepository menuRepository;
 
     @Autowired
-    public GetAllMenusService(IMenuRepository IMenuRepository) {
-        this.IMenuRepository = IMenuRepository;
+    public GetAllMenusService(IMenuRepository menuRepository) {
+        this.menuRepository = menuRepository;
     }
 
     @Override
     public List<Menu> execute() {
-        return IMenuRepository.findAll();
+        return menuRepository.findAll();
     }
 }

@@ -11,24 +11,24 @@ import org.springframework.stereotype.Service;
 @Service
 public class UpdateClientService implements ICommandModifier<Client, Client> {
 
-    private final IClientRepository IClientRepository;
+    private final IClientRepository clientRepository;
     private final ClientSubject clientSubject;
 
     @Autowired
-    public UpdateClientService(IClientRepository IClientRepository, ClientSubject clientSubject) {
-        this.IClientRepository = IClientRepository;
+    public UpdateClientService(IClientRepository clientRepository, ClientSubject clientSubject) {
+        this.clientRepository = clientRepository;
         this.clientSubject = clientSubject;
     }
 
     @Override
     public Client execute(Long id, Client client) {
-        Client existingClient = IClientRepository.findById(id)
+        Client existingClient = clientRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Cliente con el id " + id + " no encontrado"));
 
         existingClient.setName(client.getName());
         existingClient.setLastName(client.getLastName());
         existingClient.setEmail(client.getEmail());
-        Client updatedClient = IClientRepository.save(existingClient);
+        Client updatedClient = clientRepository.save(existingClient);
 
         clientSubject.notifyObservers(EventType.UPDATE, updatedClient);
         return updatedClient;

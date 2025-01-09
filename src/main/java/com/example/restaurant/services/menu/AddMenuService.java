@@ -11,18 +11,18 @@ import org.springframework.stereotype.Service;
 @Service
 public class AddMenuService implements ICommandParametrized<Void, Menu> {
 
-    private final IMenuRepository IMenuRepository;
+    private final IMenuRepository menuRepository;
     private final MenuSubject menuSubject;
 
     @Autowired
-    public AddMenuService(IMenuRepository IMenuRepository, MenuSubject menuSubject) {
-        this.IMenuRepository = IMenuRepository;
+    public AddMenuService(IMenuRepository menuRepository, MenuSubject menuSubject) {
+        this.menuRepository = menuRepository;
         this.menuSubject = menuSubject;
     }
 
     @Override
     public Void execute(Menu menu) {
-        IMenuRepository.save(menu);
+        menuRepository.save(menu);
         menuSubject.notifyObservers(EventType.CREATE, menu);
         return null;
     }

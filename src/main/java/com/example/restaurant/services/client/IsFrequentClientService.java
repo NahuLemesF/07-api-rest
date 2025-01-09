@@ -14,13 +14,13 @@ import org.springframework.stereotype.Service;
 public class IsFrequentClientService implements ICommandParametrized<Void, Client> {
 
     private final IOrderRepository orderRepository;
-    private final IClientRepository IClientRepository;
+    private final IClientRepository clientRepository;
     private final ClientSubject clientSubject;
 
     @Autowired
-    public IsFrequentClientService(IOrderRepository orderRepository, IClientRepository IClientRepository, ClientSubject clientSubject) {
+    public IsFrequentClientService(IOrderRepository orderRepository, IClientRepository clientRepository, ClientSubject clientSubject) {
         this.orderRepository = orderRepository;
-        this.IClientRepository = IClientRepository;
+        this.clientRepository = clientRepository;
         this.clientSubject = clientSubject;
     }
 
@@ -34,7 +34,7 @@ public class IsFrequentClientService implements ICommandParametrized<Void, Clien
     private void saveIsFrequentClient(Client client, Long ordersCount) {
         if (ordersCount >= 10) {
             client.setClientType(ClientType.FREQUENT);
-            IClientRepository.save(client);
+            clientRepository.save(client);
             clientSubject.notifyObservers(EventType.UPDATE, client);
         }
     }

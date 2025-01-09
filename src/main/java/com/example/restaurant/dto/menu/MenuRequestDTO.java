@@ -17,4 +17,7 @@ public class MenuRequestDTO {
     private String description;
 
     private List<Long> dishIds;
+
+    public MenuRequestDTO() {
+    }
 }

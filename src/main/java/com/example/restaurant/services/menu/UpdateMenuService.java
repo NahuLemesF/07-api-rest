@@ -11,24 +11,24 @@ import org.springframework.stereotype.Service;
 @Service
 public class UpdateMenuService implements ICommandModifier<Menu, Menu> {
 
-    private final IMenuRepository IMenuRepository;
+    private final IMenuRepository menuRepository;
     private final MenuSubject menuSubject;
 
     @Autowired
-    public UpdateMenuService(IMenuRepository IMenuRepository, MenuSubject menuSubject) {
-        this.IMenuRepository = IMenuRepository;
+    public UpdateMenuService(IMenuRepository menuRepository, MenuSubject menuSubject) {
+        this.menuRepository = menuRepository;
         this.menuSubject = menuSubject;
     }
 
     @Override
     public Menu execute(Long id, Menu updatedMenu) {
-        Menu existingMenu = IMenuRepository.findById(id)
+        Menu existingMenu = menuRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Menú con el id " + id + " no encontrado"));
 
         existingMenu.setName(updatedMenu.getName());
         existingMenu.setDescription(updatedMenu.getDescription());
 
-        Menu savedMenu = IMenuRepository.save(existingMenu);
+        Menu savedMenu = menuRepository.save(existingMenu);
         menuSubject.notifyObservers(EventType.UPDATE, savedMenu);
 
         return savedMenu;

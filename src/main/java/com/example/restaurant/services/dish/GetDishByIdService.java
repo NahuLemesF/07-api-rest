@@ -9,16 +9,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class GetDishByIdService implements ICommandParametrized<Dish, Long> {
 
-    private final IDishRepository IDishRepository;
+    private final IDishRepository dishRepository;
 
     @Autowired
-    public GetDishByIdService(IDishRepository IDishRepository) {
-        this.IDishRepository = IDishRepository;
+    public GetDishByIdService(IDishRepository dishRepository) {
+        this.dishRepository = dishRepository;
     }
 
     @Override
     public Dish execute(Long id) {
-        return IDishRepository.findById(id)
+        return dishRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Plato con el id " + id + " no encontrado"));
     }
 }

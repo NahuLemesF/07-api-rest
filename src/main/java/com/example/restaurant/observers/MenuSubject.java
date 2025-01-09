@@ -5,4 +5,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class MenuSubject extends GenericSubject<Menu> {
+
+    public MenuSubject() {
+        super();
+    }
 }

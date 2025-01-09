@@ -11,18 +11,18 @@ import org.springframework.stereotype.Service;
 @Service
 public class UpdateDishService implements ICommandModifier<Dish, Dish> {
 
-    private final IDishRepository IDishRepository;
+    private final IDishRepository dishRepository;
     private final DishSubject dishSubject;
 
     @Autowired
-    public UpdateDishService(IDishRepository IDishRepository, DishSubject dishSubject) {
-        this.IDishRepository = IDishRepository;
+    public UpdateDishService(IDishRepository dishRepository, DishSubject dishSubject) {
+        this.dishRepository = dishRepository;
         this.dishSubject = dishSubject;
     }
 
     @Override
     public Dish execute(Long id, Dish dish) {
-        Dish existingDish = IDishRepository.findById(id)
+        Dish existingDish = dishRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Plato con el id " + id + " no encontrado"));
 
         existingDish.setName(dish.getName());
@@ -30,7 +30,7 @@ public class UpdateDishService implements ICommandModifier<Dish, Dish> {
         existingDish.setPrice(dish.getPrice());
         existingDish.setMenu(dish.getMenu());
 
-        Dish updatedDish = IDishRepository.save(existingDish);
+        Dish updatedDish = dishRepository.save(existingDish);
 
         dishSubject.notifyObservers(EventType.UPDATE, updatedDish);
         return updatedDish;

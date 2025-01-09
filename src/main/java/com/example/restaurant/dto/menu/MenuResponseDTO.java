@@ -15,4 +15,6 @@ public class MenuResponseDTO {
     private String description;
     private List<DishResponseDTO> dishes;
 
+    public MenuResponseDTO() {
+    }
 }

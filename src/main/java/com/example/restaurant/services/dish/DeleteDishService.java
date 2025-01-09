@@ -11,21 +11,21 @@ import org.springframework.stereotype.Service;
 @Service
 public class DeleteDishService implements ICommandParametrized<Void, Long> {
 
-    private final IDishRepository IDishRepository;
+    private final IDishRepository dishRepository;
     private final DishSubject dishSubject;
 
     @Autowired
-    public DeleteDishService(IDishRepository IDishRepository, DishSubject dishSubject) {
-        this.IDishRepository = IDishRepository;
+    public DeleteDishService(IDishRepository dishRepository, DishSubject dishSubject) {
+        this.dishRepository = dishRepository;
         this.dishSubject = dishSubject;
     }
 
     @Override
     public Void execute(Long id) {
-        Dish dishToDelete = IDishRepository.findById(id)
+        Dish dishToDelete = dishRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Plato con el id " + id + " no encontrado"));
 
-        IDishRepository.deleteById(id);
+        dishRepository.deleteById(id);
         dishSubject.notifyObservers(EventType.DELETE, dishToDelete);
         return null;
     }

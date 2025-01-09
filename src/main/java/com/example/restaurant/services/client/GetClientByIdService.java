@@ -9,16 +9,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class GetClientByIdService implements ICommandParametrized<Client, Long> {
 
-    private final IClientRepository IClientRepository;
+    private final IClientRepository clientRepository;
 
     @Autowired
-    public GetClientByIdService(IClientRepository IClientRepository) {
-        this.IClientRepository = IClientRepository;
+    public GetClientByIdService(IClientRepository clientRepository) {
+        this.clientRepository = clientRepository;
     }
 
     @Override
     public Client execute(Long id) {
-        return IClientRepository.findById(id)
+        return clientRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Cliente con el id " + id + " no encontrado"));
     }
 }

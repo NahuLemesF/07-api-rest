@@ -11,21 +11,21 @@ import org.springframework.stereotype.Service;
 @Service
 public class DeleteMenuService implements ICommandParametrized<Void, Long> {
 
-    private final IMenuRepository IMenuRepository;
+    private final IMenuRepository menuRepository;
     private final MenuSubject menuSubject;
 
     @Autowired
-    public DeleteMenuService(IMenuRepository IMenuRepository, MenuSubject menuSubject) {
-        this.IMenuRepository = IMenuRepository;
+    public DeleteMenuService(IMenuRepository menuRepository, MenuSubject menuSubject) {
+        this.menuRepository = menuRepository;
         this.menuSubject = menuSubject;
     }
 
     @Override
     public Void execute(Long id) {
-        Menu menuToDelete = IMenuRepository.findById(id)
+        Menu menuToDelete = menuRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Menú con el id " + id + " no encontrado"));
 
-        IMenuRepository.deleteById(id);
+        menuRepository.deleteById(id);
         menuSubject.notifyObservers(EventType.DELETE, menuToDelete);
         return null;
     }

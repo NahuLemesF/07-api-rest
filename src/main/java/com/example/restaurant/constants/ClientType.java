@@ -1,5 +1,7 @@
 package com.example.restaurant.constants;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum ClientType {
     COMMON("Comun"),
     FREQUENT("Frecuente");
@@ -10,7 +12,10 @@ public enum ClientType {
         this.name = name;
     }
 
+    @JsonValue
     public String getName() {
         return name;
     }
+
 }
+

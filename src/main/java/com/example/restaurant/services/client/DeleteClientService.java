@@ -11,21 +11,21 @@ import org.springframework.stereotype.Service;
 @Service
 public class DeleteClientService implements ICommandParametrized<Void, Long> {
 
-    private final IClientRepository IClientRepository;
+    private final IClientRepository clientRepository;
     private final ClientSubject clientSubject;
 
     @Autowired
-    public DeleteClientService(IClientRepository IClientRepository, ClientSubject clientSubject) {
-        this.IClientRepository = IClientRepository;
+    public DeleteClientService(IClientRepository clientRepository, ClientSubject clientSubject) {
+        this.clientRepository = clientRepository;
         this.clientSubject = clientSubject;
     }
 
     @Override
     public Void execute(Long id) {
-        Client clientToDelete = IClientRepository.findById(id)
+        Client clientToDelete = clientRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Cliente con el id " + id + " no encontrado"));
 
-        IClientRepository.deleteById(id);
+        clientRepository.deleteById(id);
         clientSubject.notifyObservers(EventType.DELETE, clientToDelete);
         return null;
     }

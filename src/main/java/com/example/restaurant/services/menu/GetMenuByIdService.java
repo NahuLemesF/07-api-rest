@@ -9,16 +9,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class GetMenuByIdService implements ICommandParametrized<Menu, Long> {
 
-    private final IMenuRepository IMenuRepository;
+    private final IMenuRepository menuRepository;
 
     @Autowired
-    public GetMenuByIdService(IMenuRepository IMenuRepository) {
-        this.IMenuRepository = IMenuRepository;
+    public GetMenuByIdService(IMenuRepository menuRepository) {
+        this.menuRepository = menuRepository;
     }
 
     @Override
     public Menu execute(Long id) {
-        return IMenuRepository.findById(id)
+        return menuRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Menú con el id " + id + " no encontrado"));
     }
 }

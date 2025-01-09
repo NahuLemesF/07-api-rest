@@ -11,15 +11,15 @@ import java.util.List;
 @Service
 public class GetAllClientsService implements ICommand<List<Client>> {
 
-    private final IClientRepository IClientRepository;
+    private final IClientRepository clientRepository;
 
     @Autowired
-    public GetAllClientsService(IClientRepository IClientRepository) {
-        this.IClientRepository = IClientRepository;
+    public GetAllClientsService(IClientRepository clientRepository) {
+        this.clientRepository = clientRepository;
     }
 
     @Override
     public List<Client> execute() {
-        return IClientRepository.findAll();
+        return clientRepository.findAll();
     }
 }
