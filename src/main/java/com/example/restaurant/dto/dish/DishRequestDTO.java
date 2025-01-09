@@ -18,7 +18,13 @@ public class DishRequestDTO {
     @NotNull(message = "El precio es obligatorio")
     private Float price;
 
-    @NotNull(message = "El ID del menú es obligatorio")
     private Long menuId;
+
+    public DishRequestDTO(String name, String description, Float price, Long menuId) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.menuId = menuId;
+    }
 
 }

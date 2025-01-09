@@ -14,4 +14,7 @@ public class DishResponseDTO {
     private String dishType;
     private String menuName;
 
+    public DishResponseDTO() {
+    }
+
 }

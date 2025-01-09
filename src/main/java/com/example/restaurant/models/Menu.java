@@ -24,12 +24,21 @@ public class Menu {
     @OneToMany(mappedBy = "menu", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Dish> dishes;
 
-    public Menu(List<Dish> dishes, Long id, String name) {
-        this.dishes = dishes;
+    public Menu(Long id, String name, String description, List<Dish> dishes) {
         this.id = id;
         this.name = name;
+        this.description = description;
+        this.dishes = dishes;
+    }
+
+    public Menu(Long id, String name, String description) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
     }
 
     public Menu() {
     }
+
+
 }

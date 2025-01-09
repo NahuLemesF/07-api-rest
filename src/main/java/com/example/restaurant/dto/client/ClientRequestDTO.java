@@ -17,4 +17,7 @@ public class ClientRequestDTO {
 
     @Email(message = "El email debe ser válido")
     private String email;
+
+    public ClientRequestDTO() {
+    }
 }

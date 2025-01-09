@@ -16,4 +16,6 @@ public class OrderRequestDTO {
     @NotNull(message = "La lista de platos es obligatoria")
     private List<Long> dishIds;
 
+    public OrderRequestDTO() {
+    }
 }

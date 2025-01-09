@@ -39,14 +39,17 @@ public class Dish {
     @ManyToMany(mappedBy = "dishes")
     private List<Order> orders = new ArrayList<>();
 
-    public Dish(Long id, String name, String description, Float price, DishType dishType) {
+    public Dish(Long id, String name, String description, Float price, DishType dishType, Menu menu) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
         this.dishType = dishType;
+        this.menu = menu;
     }
 
     public Dish() {
     }
+
+
 }

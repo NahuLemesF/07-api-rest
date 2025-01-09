@@ -13,4 +13,7 @@ public class ClientResponseDTO {
     private String email;
     private String clientType;
 
+    public ClientResponseDTO() {
+    }
+
 }

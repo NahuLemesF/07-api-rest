@@ -8,7 +8,6 @@ import com.example.restaurant.services.dish.AddDishService;
 import com.example.restaurant.services.dish.DeleteDishService;
 import com.example.restaurant.services.dish.GetAllDishesService;
 import com.example.restaurant.services.dish.GetDishByIdService;
-import com.example.restaurant.services.dish.IsPopularDishService;
 import com.example.restaurant.services.dish.UpdateDishService;
 import com.example.restaurant.services.menu.GetMenuByIdService;
 import com.example.restaurant.utils.converter.DishDtoConverter;
@@ -41,7 +40,7 @@ public class DishController {
 
 
     @Autowired
-    public DishController(AddDishService addDishService, GetDishByIdService getDishByIdService, GetAllDishesService getAllDishesService, UpdateDishService updateDishService, DeleteDishService deleteDishService, IsPopularDishService isPopularDishService, GetMenuByIdService getMenuByIdService) {
+    public DishController(AddDishService addDishService, GetDishByIdService getDishByIdService, GetAllDishesService getAllDishesService, UpdateDishService updateDishService, DeleteDishService deleteDishService, GetMenuByIdService getMenuByIdService) {
         this.addDishService = addDishService;
         this.getDishByIdService = getDishByIdService;
         this.getAllDishesService = getAllDishesService;
@@ -51,12 +50,12 @@ public class DishController {
     }
 
     @PostMapping
-    public ResponseEntity<DishResponseDTO> addDish(@RequestBody @Valid DishRequestDTO dishRequestDTO) {
+    public DishResponseDTO addDish(@RequestBody @Valid DishRequestDTO dishRequestDTO) {
         Menu menu = getMenuByIdService.execute(dishRequestDTO.getMenuId());
         Dish dish = DishDtoConverter.convertToEntity(dishRequestDTO, menu);
-        addDishService.execute(dish);
-        DishResponseDTO responseDTO = DishDtoConverter.convertToDto(dish);
-        return ResponseEntity.status(201).body(responseDTO);
+
+        return DishDtoConverter.convertToDto(addDishService.execute(dish));
+
     }
 
     @GetMapping("/{id}")

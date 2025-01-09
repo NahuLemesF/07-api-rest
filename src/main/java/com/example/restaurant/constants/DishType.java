@@ -1,5 +1,7 @@
 package com.example.restaurant.constants;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 
 public enum DishType {
     COMMON("Comun"),
@@ -11,6 +13,7 @@ public enum DishType {
         this.name = name;
     }
 
+    @JsonValue
     public String getName() {
         return name;
     }
