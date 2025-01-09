@@ -15,4 +15,8 @@ public class GenericSubject<T> {
             observer.update(eventType, entity);
         }
     }
+
+    public void addObserver(IObserver<T> observer) {
+        observers.add(observer);
+    }
 }

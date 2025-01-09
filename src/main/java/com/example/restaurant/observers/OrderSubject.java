@@ -5,4 +5,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class OrderSubject extends GenericSubject<Order> {
+
+    public OrderSubject() {
+        super();
+    }
 }
